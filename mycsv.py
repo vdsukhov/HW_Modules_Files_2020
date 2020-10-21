@@ -25,6 +25,9 @@ def read_csv(path_to_csv_file, delimiter=","):
   return lines
 
 def write_csv(path_to_csv_file, data, delimiter=','):
+  if type(data) != list:
+    print('Incorrect call')
+    return
   newdata=str()
   for elem in data:
     if delimiter == ',':
