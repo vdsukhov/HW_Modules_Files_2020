@@ -32,31 +32,31 @@ data = [
     ['103','11.5']
     ]
 
-def write_csv(path_to_csv_file,data,delimiter = ','):
+def write_csv2(path_to_csv_file,data,delimiter = ','):
     '''
-     This function should save data from data variable 
-     to the file with name path_to_csv_file 
-     using delimiter delimiter'''
+    This function should save data from data variable 
+    to the file with name path_to_csv_file 
+    using delimiter delimiter'''
+    #if the input isn't correct error messages will appear
     if isinstance(path_to_csv_file,str) and isinstance(data,list) and isinstance(delimiter,str): 
-        #if the input isn't correct error messages will appear
         with open(path_to_csv_file,'w') as out_f:
-            for line in data:
-                #print(line)
-                for elem in line:
-                    #print(elem)
+            liste_ligne = ['']*len(data)
+            for i in range(len(data)):
+                for j in range(len(data[i])):
                     ligne = ''#empty string with the content of the line in data that will be written in the file 
-                    if delimiter in elem: #problem if element such as "10,5"  if delimiter is the comma
-                         ligne+= '"' + elem + '"' #we put in form "10,5"
-                         ligne+= delimiter
+                    if delimiter in data[i][j]: #problem if element such as "10,5"  if delimiter is the comma
+                        ligne+= '"' + data[i][j] + '"' #we put in form "10,5"
+                        ligne+= delimiter
+                        liste_ligne[i] += str(ligne)
                     else:
-                        ligne+= (elem + delimiter)
-
-                ligne = ligne[:-1] #no need for delimiter at the end of the line
-                out_f.write(ligne + '\n')
+                        ligne+= (data[i][j] + delimiter)
+                        liste_ligne[i] += str(ligne)
+            print(liste_ligne)
+            for i in range(len(liste_ligne)):
+                liste_ligne[i] = liste_ligne[i][:-1] + '\n'
+                out_f.write(liste_ligne[i])
     else : 
         print('Error, incorrect call\n')
         print('please check is the path to the file is the correct form : r"path\" \n')
         print('please check that the input data is in correct form - a list')
         print('please check that the delimiter is a string according to the form : delimiter="delimiter"')
-        
- 

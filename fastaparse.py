@@ -95,8 +95,7 @@ def parse(file_path):
         val = ""         
         fafile = open(file_path,"r")
         lines = fafile.readlines()
-        i = 0
-        while i < len(lines) :
+        for i in range((len(lines))):
             if lines[i][0] == ">":
                 key = lines[i][1: len(lines[i]) - 1] 
                 val = ""
@@ -104,14 +103,11 @@ def parse(file_path):
                 val += lines[i][:len(lines[i]) - 1] 
                 if i == len(lines) - 1 or lines[i+1][0] == ">":
                     fasta[key] = val
-            i+=1
         return fasta
     except:
         print("Error , the file can't be read")
         return {}
-
-
-
+    
 def translate(dna_seq):
     '''
     returns the protein string encoded by dna_seq as a string
@@ -119,15 +115,18 @@ def translate(dna_seq):
     stop codon is either TAA, TAG or TGA as in dna_seq table
     '''
     start = 'ATG'
-    startCod = dna_seq.index(start)
+    startPoint = dna_seq.find(start)
     seq = ''
-    if startCod != -1: #if not the last 
-        seqStart = dna_seq[int(startCod):]
+    if startPoint != -1:   #if the function was able to fins at least one start codon 
+        seqStart = dna_seq[int(startPoint):]
         for i in range(0, len(seqStart), 3):
-            if dna_codon[seqStart[i:i + 3]] == "STOP":
-                return(seq)
-            else:
-                seq += dna_codon[seqStart[i:i + 3]]
+            if len(seqStart[i:i + 3]) == 3:
+                 if dna_codon[seqStart[i:i + 3]] == "STOP":
+                     break
+                 else:
+                    seq += dna_codon[seqStart[i:i + 3]]
+                    
+        return(seq)
     elif seq != "":
         return(seq)
     
@@ -156,34 +155,36 @@ def complementarySeq(dna_seq):
     revseq = reversed(seq)
     return "".join(revseq)
 
+def candidates(seq):
+    '''
+    tests for distinc candidates among a sequence
+    '''
+    candidates = []
+    start = 'ATG'
+    longueur = len(seq)
+    for i in range(longueur -3):
+        if seq[i:i+3] == start:
+            if ('TAA' or 'TAG' or 'TGA' in seq[i+3:]):
+                seqBis = translate(seq[i:])
+                if len(seqBis) != 0 and (('M' + seqBis) not in candidates):
+                    candidates.append('M' + seqBis)
+    return candidates
 
 def orf(dna_seq):
     '''
-    This function takes DNA sequence as string 
-    and returns list of every distinct
-    candidate protein string that can be
-    translated from Open Reading Frames of dna_seq
+     This function takes a string encoding a protein
+     and returns the mass as float.
+     Function orf(dna_seq). This function
+     takes DNA sequence as string and returns 
+     list of every distinct candidate protein
+     string that can be translated from Open Reading Frames of dna_seq
     '''
-    candidates = []
+    result = list()
     seq_complementary = complementarySeq(dna_seq)
-    start = 'ATG'
-    longueur = len(dna_seq)
-    longueur_comp = len(seq_complementary)
-    for i in range (longueur-3) :
-        if dna_seq[i:i+3] == start :
-            if ('TAA' or 'TAG' or 'TGA' in dna_seq[i+3:]):
-                seq = translate(dna_seq[i:])
-                if len(seq) != 0 and (('M' + seq) not in candidates):
-                    candidates.append('M' + seq)
-    #same thing as above but with complementary sequence                 
-    for i in range (longueur_comp-3) :
-        if seq_complementary[i:i+3] == start :
-            if ('TAA' or 'TAG' or 'TGA') in seq_complementary[i+3:]:
-                seq = translate(seq_complementary[i :])
-                if len(seq) != 0 and (('M' + seq) not in candidates):
-                    candidates.append('M' + seq)
-    return candidates
+    result = candidates(dna_seq) + candidates(seq_complementary)
+    return result
   
+    
 dna_seq = "ACAGGACGGCATTGCCACGTCACGC"\
            "CGTTTTGCCAGAGACATCGATCGCG"\
            "AAGCCGATTTCGATGAGTCCCGCAT"\
@@ -195,3 +196,8 @@ dna_seq = "ACAGGACGGCATTGCCACGTCACGC"\
            "CTTCTCTCTCGAAAGCTGACCTTCG"\
            "ACATGTAAAAGATAAATCCAGCAGA"\
            "TGCATGTAACCAAGGTCGGACCAGA"    
+          
+
+
+
+
