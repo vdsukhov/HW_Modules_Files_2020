@@ -111,15 +111,3 @@ def orf(dna_seq):
     if elem not in orfs_end:
       orfs_end.append(elem)
   return orfs_end
-
-dna_seq = "ACAGGACGGCATTGCCACGTCACGC"\
-           "CGTTTTGCCAGAGACATCGATCGCG"\
-           "AAGCCGATTTCGATGAGTCCCGCAT"\
-           "GCCTAAGGCACAATAGAATGTAGCA"\
-           "TCCAGACACTGAGGTGCGTCTGGAA"\
-           "AAAGACACTCAGGGATAAAAATCAC"\
-           "AGTACCACACAGTGCCGCAGCTCCG"\
-           "AATGTCGAGGTTCATATAATCGGAC"\
-           "CTTCTCTCTCGAAAGCTGACCTTCG"\
-           "ACATGTAAAAGATAAATCCAGCAGA"\
-           "TGCATGTAACCAAGGTCGGACCAGA"
